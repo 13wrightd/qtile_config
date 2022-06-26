@@ -50,8 +50,6 @@ keys = [
     Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
     # Grow windows. If current window is on the edge of screen and direction
     # will be to screen edge - window would shrink.
-    # Floating windows
-    
     Key([mod], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
     Key([mod], "l", lazy.layout.grow_right(), desc="Grow window to the right"),
     Key([mod], "j", lazy.layout.grow_down(), desc="Grow window down"),
@@ -67,49 +65,29 @@ keys = [
         lazy.layout.toggle_split(),
         desc="Toggle between split and unsplit sides of stack",
     ),
-    Key([mod], "f", lazy.window.toggle_floating()),
-    Key([mod], "Return", lazy.spawn('urxvt -e tmux new-session -A -s scratch'), desc="Launch terminal"),
+    Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     # Toggle between different layouts as defined below
-
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
-
-    # alt tab and mod tab to cycle through windows
     Key([alt], "Tab", lazy.group.next_window(), desc="Focus next window"),
-    Key([alt, "shift"], "Tab", lazy.group.prev_window(), desc="Focus previous window"),
-    Key([mod], "Tab", lazy.group.next_window(), desc="Focus next window"),
-    Key([mod, "shift"], "Tab", lazy.group.prev_window(), desc="Focus previous window"),
+    Key([alt, "shift"], "Tab", lazy.group.prev_window(), desc="Focus next window"),
     
     Key([mod], "Escape", lazy.window.kill(), desc="Kill focused window"),
-    Key([mod], "c", lazy.window.kiTabll(), desc="Kill focused window"),
+    Key([mod], "c", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "shift"], "c", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
-    # Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
-    #Key([mod], "space", lazy.spawn("""rofi -run-list-command ". /home/dan/.bash_aliases" -run-command "/bin/bash -i -c '{cmd}'" -show run""",shell=True)),
-    Key([mod], "space", lazy.spawn("rofi -show run",shell=True)),
-    #Key([mod], "p", l`azy.spawn("yad --notification='echo hello world' --image=/home/dan/Downloads/record-icon-48.png --listen --icon-size=48")),
-    Key([mod], "p", lazy.spawn("rrec")),
-
-    #Key([mod], "space", lazy.spawn("/home/dan/bin/rofi-alias",shell=True)),
-    Key([mod], "r", lazy.spawn("rofi -show run",shell=True)),
-    #Key([mod, "shift"], "r", lazy.spawncmd()),
-    #remove
-  
+    Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
 ]
-# subprocess.run(cmd, shell=True)
 
 #groups = [Group(i) for i in [123456789]]
 
 groups = [
-    Group("1"),
+    Group("1", spawn = 'code-git'),
     Group("2", spawn = 'google-chrome-stable' ),
     Group("3"),
     # Group("1", matches=Match(wm_class=["code-git-qtile"])),
     Group("4"),
-    Group("5", spawn = 'vscodium' ),
-    Group("6"),
-    Group("7"),
-    Group("8"),
+    Group("5"),
     Group("g", label = 'gchat', spawn = 'chromium --app=https://mail.google.com/chat'),
     Group("s", label = 'slack', spawn = 'slack'),
     Group("e", label = 'email', spawn = 'thunderbird')
@@ -174,11 +152,11 @@ for i in groups:
             Key([mod], "Left", lazy.screen.prev_group(),
                 desc="Switch to previous group"),
             # go to next group with tab
-            # Key([mod], "Tab", lazy.screen.next_group(),
-            #     desc="Switch to next group"),
-            # # go to previous group with tab
-            # Key([mod, "shift"], "Tab", lazy.screen.prev_group(),
-            #     desc="Switch to previous group"),
+            Key([mod], "Tab", lazy.screen.next_group(),
+                desc="Switch to next group"),
+            # go to previous group with tab
+            Key([mod, "shift"], "Tab", lazy.screen.prev_group(),
+                desc="Switch to previous group"),
             
             # Key(
             #     [mod, "shift"],
@@ -191,8 +169,8 @@ for i in groups:
             Key(
                 [mod, "shift"],
                 i.name,
-                lazy.window.togroup(i.name, switch_group=False),
-                desc="Don't switch to, but move focused window to group {}".format(i.name),
+                lazy.window.togroup(i.name, switch_group=True),
+                desc="Switch to & move focused window to group {}".format(i.name),
             ),
             # Or, use below if you prefer not to switch to that group.
             # # mod1 + shift + letter of group = move focused window to group
@@ -255,7 +233,7 @@ screens = [
                 # widget.TextBox("default config", name="default"),
                 # widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
                 widget.Net(prefix='M', fontsize=18, padding=5, format='{down}↓{up}↑', interface='wlp0s20f3'),
-                widget.Systray(icon_size=24),
+                widget.Systray(),
                 # widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
                 # %a for day of week
                 widget.Volume(fmt='Vol: {}'),
@@ -316,3 +294,5 @@ wl_input_rules = None
 # We choose LG3D to maximize irony: it is a 3D non-reparenting WM written in
 # java that happens to be on java's whitelist.
 wmname = "LG3D"
+
+
